@@ -1,6 +1,6 @@
 USTH Machine Learning in Medicine 2026
 ==================================
 
-*Your name : Dinh Thanh Hai
-*Your ID : 22BA13119
-*Your team ID : Group 2
+Dinh Thanh Hai
+22BA13119
+Group 2
