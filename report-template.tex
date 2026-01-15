@@ -5,7 +5,7 @@
 \usepackage{graphicx}
 
 \title{ECG Heartbeat Classification Using Random Forest}
-\author{Dinh Thanh Hai - 22BA13119}
+\author{Dinh Thanh Hai -- 22BA13119}
 \date{}
 
 \begin{document}
@@ -15,56 +15,66 @@
 
 \section{Introduction}
 
-Electrocardiogram (ECG) is a widely used tool for monitoring the electrical activity of the heart and detecting cardiac abnormalities. Automatic classification of ECG heartbeats plays an important role in supporting doctors in diagnosing heart diseases.
+Electrocardiogram (ECG) signals record the electrical activity of the heart and are widely used for diagnosing cardiovascular diseases. Different types of heartbeats correspond to different cardiac conditions, and accurate automatic classification of ECG beats is essential for clinical decision support systems.
 
-In recent years, deep learning models such as Convolutional Neural Networks (CNNs) have been widely applied to ECG classification. However, these models usually require high computational cost and large amounts of data. Therefore, in this project, I investigate the performance of a traditional machine learning model, Random Forest, for ECG heartbeat classification and compare the results with a CNN-based research study.
+Recently, deep learning models, especially Convolutional Neural Networks (CNNs), have achieved state-of-the-art performance in ECG analysis. These models can automatically learn complex features from raw signals, but they usually require large training datasets and high computational cost.
+
+In this project, instead of using deep learning, a traditional machine learning approach based on Random Forest is applied to classify ECG heartbeats. The goal is to investigate whether a simpler model can still achieve high performance when trained on well-prepared ECG waveform data, and to compare the obtained results with a CNN-based method reported in the literature.
 
 \section{Dataset Description}
 
-The dataset used in this project is the MIT-BIH Arrhythmia Dataset (Kaggle version), where each ECG signal has been segmented into individual heartbeats and normalized.
+The dataset used in this study is the MIT-BIH Arrhythmia Dataset (Kaggle version). The original MIT-BIH dataset contains long ECG recordings from multiple patients. In the Kaggle version, these recordings have been preprocessed and segmented into individual heartbeats.
 
-Each data sample consists of:
+Each heartbeat is represented by 187 normalized ECG samples, which correspond to one complete cardiac cycle. Therefore, each data sample is a vector of 187 real-valued features, followed by one class label.
+
+The dataset contains five heartbeat classes:
 \begin{itemize}
-    \item 187 real-valued features representing the ECG waveform
-    \item One class label indicating the type of heartbeat
+    \item Normal (N)
+    \item Supraventricular Ectopic Beat (S)
+    \item Ventricular Ectopic Beat (V)
+    \item Fusion Beat (F)
+    \item Unknown (Q)
 \end{itemize}
 
-There are five heartbeat classes: Normal, Supraventricular Ectopic Beat (SVEB), Ventricular Ectopic Beat (VEB), Fusion beat, and Unknown.  
-The dataset is provided in two files: \texttt{mitbih\_train.csv} and \texttt{mitbih\_test.csv}.  
-The dataset is highly imbalanced, with normal beats being the majority class.
+The data is provided in two files: \texttt{mitbih\_train.csv} and \texttt{mitbih\_test.csv}. The training set is used to build the model, while the test set is used for performance evaluation. The dataset is highly imbalanced, with normal beats being the dominant class, while fusion and unknown beats appear much less frequently.
 
 \section{Methodology}
 
-In this project, a Random Forest classifier is used to perform five-class heartbeat classification.  
-Random Forest is an ensemble of decision trees, where the final prediction is determined by majority voting among the trees.
+A Random Forest classifier is used for ECG heartbeat classification. Random Forest is an ensemble learning method that builds a large number of decision trees during training. Each tree makes an independent prediction, and the final output is determined by majority voting.
 
-Each heartbeat is represented by 187 ECG values and is directly fed into the model without handcrafted feature extraction.  
-To handle the strong class imbalance, the parameter \texttt{class\_weight = balanced} is applied during training.
+The input to the model is the raw ECG waveform of each heartbeat, represented by 187 numerical values. No handcrafted features such as QRS duration or heart rate are used. This allows the model to directly learn discriminative patterns from the ECG shape.
+
+Because the dataset is highly imbalanced, the parameter \texttt{class\_weight = balanced} is applied. This forces the classifier to give higher importance to minority classes during training, helping to improve the recognition of rare heartbeat types.
 
 \section{Results}
 
-The Random Forest model achieved an overall accuracy of 97\% on the test set.  
-High F1-scores were obtained for the most important classes:
+After training, the Random Forest model was evaluated on the independent test set. The model achieved an overall classification accuracy of 97\%.
+
+The performance on major heartbeat types was particularly strong:
 \begin{itemize}
-    \item Normal: 0.98
-    \item Ventricular Ectopic Beat: 0.93
+    \item Normal beats: F1-score = 0.98
+    \item Ventricular Ectopic Beats: F1-score = 0.93
 \end{itemize}
 
-Lower performance was observed for rare classes such as Fusion beats due to their limited number of samples.
+These results indicate that the model is able to correctly identify both healthy heartbeats and clinically important abnormal beats. Lower performance was observed for rare classes such as fusion beats, which is expected due to their small number of training samples.
 
 \section{Comparison with the Original Paper}
 
-The original paper uses a deep CNN and follows the AAMI EC57 standard, reporting an accuracy of 93.4\% on the MIT-BIH dataset.  
-In this project, the Random Forest achieved 97\% accuracy. However, these two results are not directly comparable because the Kaggle dataset used here is pre-segmented and uses a fixed train--test split, which makes the task easier than the patient-wise evaluation used in the original paper.
+The original research paper applies a deep convolutional neural network (CNN) to classify ECG heartbeats and evaluates the model according to the AAMI EC57 standard. Using this strict clinical protocol, the authors report an average accuracy of 93.4\% on the MIT-BIH Arrhythmia dataset.
 
-Nevertheless, the results show that even a traditional machine learning model such as Random Forest can achieve very strong performance when trained on well-prepared ECG data.
+In contrast, this project uses a Random Forest classifier and the Kaggle version of the dataset, where ECG beats are already segmented and provided in a fixed train--test split. Under this setting, the Random Forest achieved 97\% accuracy, which is higher than the accuracy reported by the CNN model.
+
+However, this difference should be interpreted carefully. The AAMI EC57 standard uses patient-wise splitting and more realistic clinical evaluation, making the classification task more difficult. The Kaggle dataset, on the other hand, is easier because the signals are preprocessed and patient information is not considered.
+
+Nevertheless, the high accuracy obtained in this project demonstrates that ECG waveforms in this dataset are highly separable and that even a traditional machine learning model can achieve very strong performance.
 
 \section{Conclusion}
 
-In this project, a Random Forest classifier was built to classify ECG heartbeats from the MIT-BIH dataset. The model achieved 97\% accuracy, demonstrating that ECG waveforms contain highly discriminative patterns.
+This project investigated ECG heartbeat classification using a Random Forest model on the MIT-BIH Arrhythmia dataset. Each heartbeat was represented by 187 ECG waveform values, allowing the classifier to directly learn from raw signal patterns.
 
-Although deep learning models such as CNNs are powerful, this study shows that traditional machine learning approaches can also provide competitive and reliable performance for ECG heartbeat classification when the data is properly processed.
+Despite being a traditional machine learning approach without deep feature extraction, the Random Forest achieved 97\% accuracy on the test set, with excellent performance on both normal and abnormal heartbeats. This shows that well-prepared ECG data contains strong diagnostic information that can be captured even by relatively simple models.
+
+Overall, this study confirms that while deep learning methods such as CNNs are powerful, traditional machine learning techniques like Random Forest remain highly effective for ECG classification tasks, especially when the data is clean and well-structured.
 
 \end{multicols}
-
 \end{document}
