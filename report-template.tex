@@ -1,22 +1,70 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[a4paper,10pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{multicol}
+\usepackage{times}
+\usepackage{graphicx}
 
-\title{This is your report}
+\title{ECG Heartbeat Classification Using Random Forest}
+\author{Dinh Thanh Hai - 22BA13119}
+\date{}
 
 \begin{document}
-
 \maketitle
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\begin{multicols}{2}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Introduction}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Electrocardiogram (ECG) is a widely used tool for monitoring the electrical activity of the heart and detecting cardiac abnormalities. Automatic classification of ECG heartbeats plays an important role in supporting doctors in diagnosing heart diseases.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+In recent years, deep learning models such as Convolutional Neural Networks (CNNs) have been widely applied to ECG classification. However, these models usually require high computational cost and large amounts of data. Therefore, in this project, I investigate the performance of a traditional machine learning model, Random Forest, for ECG heartbeat classification and compare the results with a CNN-based research study.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Dataset Description}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The dataset used in this project is the MIT-BIH Arrhythmia Dataset (Kaggle version), where each ECG signal has been segmented into individual heartbeats and normalized.
+
+Each data sample consists of:
+\begin{itemize}
+    \item 187 real-valued features representing the ECG waveform
+    \item One class label indicating the type of heartbeat
+\end{itemize}
+
+There are five heartbeat classes: Normal, Supraventricular Ectopic Beat (SVEB), Ventricular Ectopic Beat (VEB), Fusion beat, and Unknown.  
+The dataset is provided in two files: \texttt{mitbih\_train.csv} and \texttt{mitbih\_test.csv}.  
+The dataset is highly imbalanced, with normal beats being the majority class.
+
+\section{Methodology}
+
+In this project, a Random Forest classifier is used to perform five-class heartbeat classification.  
+Random Forest is an ensemble of decision trees, where the final prediction is determined by majority voting among the trees.
+
+Each heartbeat is represented by 187 ECG values and is directly fed into the model without handcrafted feature extraction.  
+To handle the strong class imbalance, the parameter \texttt{class\_weight = balanced} is applied during training.
+
+\section{Results}
+
+The Random Forest model achieved an overall accuracy of 97\% on the test set.  
+High F1-scores were obtained for the most important classes:
+\begin{itemize}
+    \item Normal: 0.98
+    \item Ventricular Ectopic Beat: 0.93
+\end{itemize}
+
+Lower performance was observed for rare classes such as Fusion beats due to their limited number of samples.
+
+\section{Comparison with the Original Paper}
+
+The original paper uses a deep CNN and follows the AAMI EC57 standard, reporting an accuracy of 93.4\% on the MIT-BIH dataset.  
+In this project, the Random Forest achieved 97\% accuracy. However, these two results are not directly comparable because the Kaggle dataset used here is pre-segmented and uses a fixed train--test split, which makes the task easier than the patient-wise evaluation used in the original paper.
+
+Nevertheless, the results show that even a traditional machine learning model such as Random Forest can achieve very strong performance when trained on well-prepared ECG data.
+
+\section{Conclusion}
+
+In this project, a Random Forest classifier was built to classify ECG heartbeats from the MIT-BIH dataset. The model achieved 97\% accuracy, demonstrating that ECG waveforms contain highly discriminative patterns.
+
+Although deep learning models such as CNNs are powerful, this study shows that traditional machine learning approaches can also provide competitive and reliable performance for ECG heartbeat classification when the data is properly processed.
+
+\end{multicols}
 
 \end{document}
