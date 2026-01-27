@@ -1,0 +1,149 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{multicol}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{caption}
+
+\title{\textbf{ECG Heartbeat Classification Using Random Forest}}
+\author{Dinh Thanh Hai -- 22BA13119}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{multicols}{2}
+
+\section*{Abstract}
+Electrocardiogram (ECG) signals contain important information about the electrical activity of the heart, so they are widely used to detect cardiovascular problems such as arrhythmia and myocardial infarction (MI). However, reading ECG manually takes time and may depend on the experience of the doctor. Because of that, building an automatic ECG classification system is useful in practice. In this report, I present a heartbeat-level ECG classification pipeline using a Random Forest model. First, raw ECG recordings are preprocessed and segmented into individual heartbeat signals. Then, these heartbeat segments are used to train an arrhythmia classifier. After training, I evaluate the model using standard metrics such as precision, recall, F1-score, and confusion matrix. The results on the MIT-BIH dataset show that the proposed approach achieves high accuracy and learns meaningful representations of ECG morphology. In addition, the same approach is evaluated on myocardial infarction detection using the PTBDB dataset, where strong performance is also achieved.
+
+\section{Introduction}
+Cardiovascular diseases are among the main causes of death worldwide. In clinical settings, ECG is one of the most common and low-cost tools to monitor heart activity. From an ECG waveform, clinicians can identify abnormal rhythms and other heart problems. Even so, ECG interpretation is not always easy. In many cases, a clinician has to examine long signals and decide based on subtle waveform patterns. Therefore, manual analysis can be slow and may lead to inconsistent results between different observers.
+
+Because of these reasons, machine learning methods have been applied to ECG analysis. The core idea is to train a model that can learn patterns from labeled ECG data and then predict the class for new signals. In this report, I focus on heartbeat-level classification because arrhythmia types are often recognized by the shape of each beat. I use a Random Forest classifier because it is simple to implement, works well on tabular features, and can handle non-linear decision boundaries. In addition, Random Forest is relatively robust and often performs well even when the dataset is imbalanced.
+
+I also discuss the idea of representation learning in a practical way. When a model learns to classify arrhythmia, it must learn discriminative waveform characteristics. These learned characteristics can be reused later for another related task such as MI prediction.
+
+\section{Dataset}
+Experiments are conducted on two public ECG datasets: the MIT-BIH Arrhythmia Dataset and the PTB Diagnostic ECG Database (PTBDB). The MIT-BIH dataset is used for arrhythmia classification, while the PTBDB dataset is used for myocardial infarction detection.
+
+For the MIT-BIH dataset, each ECG recording is segmented into individual heartbeat signals. Each heartbeat is represented as a fixed-length vector of ECG amplitudes, and the corresponding label indicates the arrhythmia class. The dataset contains five heartbeat classes labeled from 0 to 4. Class 0 represents normal beats and is the majority class, while the remaining classes correspond to different abnormal heartbeat types. The dataset is imbalanced, so evaluation metrics beyond accuracy are required.
+
+For the PTBDB dataset, ECG beats are labeled as either normal or abnormal (MI). Two separate files containing normal and abnormal beats are combined to form a binary classification dataset. The combined dataset is then shuffled and split into training and testing sets.
+
+\section{Methodology}
+
+\subsection{Preprocessing}
+Raw ECG signals are continuous time-series data and must be converted into fixed-size input vectors. ECG recordings are segmented into individual heartbeat signals, usually centered around the R-peak. Each heartbeat is then resampled or padded to a fixed length so that all beats contain the same number of samples.
+
+Next, heartbeat signals are normalized to reduce scale differences between recordings. This step helps the classifier focus on waveform shape rather than absolute signal amplitude. Figure~1 shows an example of a raw ECG signal segment, and Figure~2 shows an extracted ECG beat after preprocessing.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{ECGsignal.png}
+    \caption{Example raw ECG signal segment.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{ECGbeat.png}
+    \caption{Extracted ECG beat after preprocessing.}
+\end{figure}
+
+\subsection{Training the Arrhythmia Classifier}
+After preprocessing, an arrhythmia classifier is trained using a Random Forest model. Random Forest is an ensemble method that combines multiple decision trees trained on random subsets of data and features. The final prediction is obtained by majority voting across trees.
+
+This approach reduces overfitting compared to a single decision tree and allows the model to capture non-linear decision boundaries. During training, the model learns the relationship between ECG waveform patterns and arrhythmia classes.
+
+\subsection{Training the MI Classifier}
+The same Random Forest approach is also applied to myocardial infarction detection using the PTBDB dataset. In this case, the task is binary classification between normal and MI beats. The two PTBDB files are merged, shuffled, and split into training and testing sets. The model is trained using the same general configuration as the arrhythmia classifier.
+
+\subsection{Implementation Details}
+The Random Forest models are trained on heartbeat vectors. Due to class imbalance, class weighting strategies are used to reduce bias toward the majority class. Model performance is evaluated using precision, recall, F1-score, confusion matrix, and ROC analysis. Principal Component Analysis (PCA) is used to visualize learned ECG representations.
+
+\section{Results}
+
+\subsection{Arrhythmia Classification on the MIT-BIH Dataset}
+The arrhythmia classifier achieves an overall accuracy of \textbf{97\%} on the MIT-BIH test set. Since the dataset is imbalanced, class-wise precision, recall, and F1-score are reported in Table~\ref{tab:arrhythmia}.
+
+Normal beats (class 0) show very high recall, indicating that most normal beats are correctly identified. Class 4 also achieves strong performance. Minority classes show lower performance due to limited training samples and morphological similarity between classes.
+
+\begin{table}[H]
+    \centering
+    \caption{Arrhythmia classification results on the MIT-BIH test set.}
+        \label{tab:arrhythmia}
+    \begin{tabular}{c c c c c}
+    \toprule
+    Class & Precision & Recall & F1-score & Support \\
+    \midrule
+    0 & 0.97 & 0.99 & 0.98 & 18118 \\
+    1 & 0.92 & 0.63 & 0.75 & 556 \\
+    2 & 0.98 & 0.88 & 0.93 & 1448 \\
+    3 & 0.59 & 0.70 & 0.64 & 162 \\
+    4 & 1.00 & 0.95 & 0.97 & 1608 \\
+    \midrule
+    Macro Avg & 0.89 & 0.83 & 0.85 & 21892 \\
+    Weighted Avg & 0.97 & 0.97 & 0.97 & 21892 \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{confusionmatrix.png}
+    \caption{Confusion matrix for arrhythmia classification on the MIT-BIH dataset.}
+\end{figure}
+
+\subsection{MI Classification on the PTBDB Dataset}
+The Random Forest model is further evaluated on myocardial infarction detection using the PTBDB dataset. Figure~\ref{fig:mi_cm} shows the confusion matrix for MI classification. The model correctly classifies 2049 MI beats and 753 normal beats. Only a small number of samples are misclassified, including 53 MI beats predicted as normal and 56 normal beats predicted as MI. The low number of false negatives indicates that the model rarely misses MI cases.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{confusion_matrix_mi.png}
+    \caption{Confusion matrix for myocardial infarction classification on the PTBDB dataset.}
+    \label{fig:mi_cm}
+\end{figure}
+
+Figure~\ref{fig:mi_roc} presents the ROC curve for MI classification. The model achieves an AUC value of 0.9941, indicating excellent separation between normal and MI ECG beats across different decision thresholds.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{roc_curve_mi.png}
+    \caption{ROC curve for MI classification on the PTBDB dataset (AUC = 0.9941).}
+    \label{fig:mi_roc}
+\end{figure}
+
+\subsection{Visualization of the Learned Representation}
+PCA is used to visualize the learned ECG beat representations. The projection shows partially separable clusters corresponding to different heartbeat classes, indicating that the model learns meaningful and structured ECG representations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{pca_ecg_representation.png}
+    \caption{PCA visualization of learned ECG beat representations.}
+\end{figure}
+
+\subsection{Comparison with Related Work}
+The results obtained in this study are compared with the work of Kachuee et al., who proposed a deep transferable representation for ECG heartbeat classification and MI prediction using a deep residual convolutional neural network. Their model achieves an arrhythmia classification accuracy of 93.4\% on the MIT-BIH dataset and an MI accuracy of 95.9\% on the PTBDB dataset.
+
+In comparison, the Random Forest model in this study achieves higher accuracy for arrhythmia classification and a very high AUC value for MI detection. These results suggest that traditional machine learning models, when combined with effective preprocessing, can achieve performance comparable to deep learning approaches while remaining simpler and easier to implement.
+
+\section{Conclusion}
+In this report, I built an ECG heartbeat classification system using a Random Forest model and evaluated it on both arrhythmia classification and myocardial infarction detection tasks. The experimental results show high accuracy on the MIT-BIH dataset and excellent MI detection performance on the PTBDB dataset.
+
+Although the dataset imbalance still affects minority-class performance, the overall results demonstrate that the proposed approach is effective and reliable. In future work, this system can be improved by applying stronger class balancing techniques, exploring deep learning models, and evaluating the approach on additional ECG datasets.
+
+\section*{References}
+\begin{itemize}
+    \item MIT-BIH Arrhythmia Database, PhysioNet.
+    \item PTB Diagnostic ECG Database, PhysioNet.
+    \item L. Breiman, ``Random Forests,'' Machine Learning, 2001.
+    \item A. L. Goldberger et al., ``PhysioBank, PhysioToolkit, and PhysioNet,'' Circulation, 2000.
+    \item M. Kachuee, S. Fazeli, and M. Sarrafzadeh, ``ECG Heartbeat Classification: A Deep Transferable Representation,'' arXiv preprint arXiv:1805.00794, 2018.
+\end{itemize}
+
+\end{multicols}
+\end{document}
+
