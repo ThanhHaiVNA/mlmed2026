@@ -1,0 +1,131 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{multicol}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{caption}
+
+\title{\textbf{Head Circumference Estimation from Ultrasound Images Using Convolutional Neural Networks}}
+\author{Dinh Thanh Hai -- 22BA13119}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{multicols}{2}
+
+\section*{Abstract}
+Ultrasound imaging is widely used to monitor fetal development during pregnancy.
+One important measurement is the head circumference (HC), which helps doctors
+evaluate the growth of the fetus.
+In this study, a convolutional neural network (CNN) is used to estimate the head
+circumference directly from ultrasound images.
+The model is trained and evaluated using Mean Absolute Error (MAE).
+The experimental results show that the proposed method can predict head
+circumference with good accuracy.
+
+\section*{I. Introduction}
+Medical imaging plays an important role in prenatal healthcare.
+Ultrasound images are commonly used because they are safe and non-invasive.
+Head circumference is a key indicator of fetal growth and brain development.
+Traditionally, this measurement is performed manually by medical experts.
+
+Recently, deep learning methods have shown strong performance in medical image
+analysis.
+Therefore, this study aims to use a convolutional neural network to automatically
+predict the head circumference from ultrasound images.
+This approach can help reduce manual effort and improve measurement consistency.
+
+\section*{II. Dataset Description}
+The dataset used in this study consists of ultrasound images and corresponding
+head circumference values.
+The data is divided into a training set and a validation set.
+
+\subsection*{A. Data Structure}
+Each data sample includes:
+\begin{itemize}
+    \item An ultrasound image file.
+    \item Pixel size information in millimeters.
+    \item The ground truth head circumference value in millimeters.
+\end{itemize}
+
+A total of 999 images are provided, where 799 images are used for training and
+200 images are used for validation.
+
+\subsection*{B. Summary Statistics}
+The head circumference values range from approximately 44 mm to 346 mm.
+Most samples are concentrated around the middle range, which represents normal
+fetal development stages.
+
+\subsection*{C. Data Distribution}
+Figure~1 shows the distribution of head circumference values in the dataset.
+The histogram indicates that the data is not uniformly distributed.
+However, it still covers a wide range of values, which is useful for training
+a regression model.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{download-7.png}
+    \caption{Distribution of head circumference values}
+\end{figure}
+
+\section*{III. Implementation}
+The model is implemented using Python and the PyTorch deep learning framework.
+Google Colab is used for training with GPU acceleration.
+
+\subsection*{A. Preprocessing}
+All images are resized and normalized before being fed into the network.
+The dataset is loaded using a custom PyTorch Dataset class.
+The training set contains 799 images, while the validation set contains 200 images.
+
+\subsection*{B. Model Selection}
+A convolutional neural network based on a pretrained ResNet architecture is used.
+The pretrained weights help the model learn faster and improve performance.
+The final fully connected layer is modified to output a single continuous value
+for head circumference prediction.
+
+\section*{IV. Training Setup}
+The model is trained using the Mean Absolute Error (MAE) loss function.
+The Adam optimizer is applied to update the model parameters.
+Training is performed for multiple epochs until the validation error stabilizes.
+
+The dataset split is shown below:
+\begin{itemize}
+    \item Training set: 799 images
+    \item Validation set: 200 images
+\end{itemize}
+
+\section*{V. Results and Discussion}
+After training, the model is evaluated on the validation set.
+The final Mean Absolute Error obtained is 10.97 mm.
+
+Figure~2 shows the relationship between predicted values and ground truth values.
+Most points are close to the diagonal line, which represents perfect prediction.
+This indicates that the model is able to learn the relationship between ultrasound
+images and head circumference.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{download-8.png}
+    \caption{Predicted head circumference versus ground truth}
+\end{figure}
+
+Although the results are good, some prediction errors still exist.
+This may be caused by image noise, variation in fetal position, or limited data.
+
+\section*{VI. Conclusion}
+This study demonstrates that a convolutional neural network can be used to
+estimate fetal head circumference from ultrasound images.
+The proposed model achieves a validation MAE of 10.97 mm, which shows good
+prediction accuracy.
+
+In the future, performance can be improved by using more training data,
+stronger data augmentation, or more advanced neural network architectures.
+This approach has the potential to support doctors in prenatal healthcare.
+
+\end{multicols}
+
+\end{document}
